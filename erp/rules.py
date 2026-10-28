@@ -311,7 +311,10 @@ def simplified_tax(monthly, family, children, pct, rows, anchor):
     if cut:
         tax = max(Fraction(0), tax - cut)
         text += f" − 8~20세 자녀 {children}명 {cut:,}원 = {num_won(tax)}원"
-    if pct != 100:
+    if pct != 100:                                  # 100% 세액을 먼저 절사한 뒤 비율을 곱한다 (홈택스 계산기와 같은 순서)
+        if tax != won_down10(tax):
+            tax = Fraction(won_down10(tax))
+            text += f" → 10원 미만 절사 {num_won(tax)}원"
         tax = tax * pct / 100
         text += f" × 원천징수 비율 {pct}% = {num_won(tax)}원"
     income_tax = won_down10(tax)
