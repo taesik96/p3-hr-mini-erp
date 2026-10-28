@@ -1,0 +1,19 @@
+# 푸시할 때마다 Streamlit Cloud와 같은 리눅스 환경에서 테스트를 돌린다
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 한글 글꼴 (명세서 PDF 테스트용, Streamlit Cloud의 packages.txt와 같음)
+        run: sudo apt-get update && sudo apt-get install -y fonts-nanum
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest -q
